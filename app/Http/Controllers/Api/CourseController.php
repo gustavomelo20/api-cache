@@ -3,17 +3,19 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CourseResource;
+use App\Services\CourseService;
 use Illuminate\Http\Request;
 
 class CourseController extends Controller
 {
 
-     protected $courseService;
+    protected $courseService;
 
-     public function _construct(CourseService $courseService) 
-     {
-            $this->courseServise = $courseService;
-     }
+    public function __construct(CourseService $courseService)
+    {
+        $this->courseService = $courseService;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -21,7 +23,10 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $courses = $this->courseService->getCourse;
+
+        $courses = $this->courseService->getCourses();
+
+        return $courses;
     }
 
     /**
