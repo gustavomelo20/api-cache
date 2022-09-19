@@ -17,9 +17,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/courses',  [CourseController::class, 'index']);
+Route::post('/courses', [CourseController::class, 'store']);
+
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
 
-Route::get('/courses', [CourseController::class, 'index']);

@@ -20,5 +20,9 @@ class CourseService
         return $this->repository->getAllCourses();
     }
 
+    public function storeNewCourse(array $data) 
+    {
+        return $this->repository->storeNewCourse($data);
+    }
     
 }
