@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreUpdateModule;
+use App\Http\Resources\ModuleResource;
+use App\Services\ModuleService;
 use Illuminate\Http\Request;
 
 class ModuleController extends Controller
@@ -13,6 +16,7 @@ class ModuleController extends Controller
     {
         $this->moduleService = $moduleService;
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -20,10 +24,9 @@ class ModuleController extends Controller
      */
     public function index($course)
     {
-
         $modules = $this->moduleService->getModulesByCourse($course);
 
-        return $modules;
+        return ModuleResource::collection($modules);
     }
 
     /**
@@ -34,22 +37,22 @@ class ModuleController extends Controller
      */
     public function store(StoreUpdateModule $request, $course)
     {
-        $module = $this->moduleService->storeNewModule($request->validated());
-        
-        return new ModuleResource($module);  
+        $module = $this->moduleService->createNewModule($request->validated());
+
+        return new ModuleResource($module);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $identify
+     * @param  string  $identify
      * @return \Illuminate\Http\Response
      */
-    public function show($course ,$identify)
+    public function show($course, $identify)
     {
-        $module = $this->moduleResource->getModuleByCourse($course, $identify); 
+        $course = $this->moduleService->getModuleByCourse($course, $identify);
 
-        return new ModuleResource($course);  
+        return new ModuleResource($course);
     }
 
     /**
@@ -59,10 +62,10 @@ class ModuleController extends Controller
      * @param  string  $identify
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreUpdateModule $request,$course, $identify)
+    public function update(StoreUpdateModule $request, $course, $identify)
     {
-        $this->courseService->updateModule($identify, $request->validated());
-        
+        $this->moduleService->updateModule($identify, $request->validated());
+
         return response()->json(['message' => 'updated']);
     }
 
@@ -72,9 +75,9 @@ class ModuleController extends Controller
      * @param  string  $identify
      * @return \Illuminate\Http\Response
      */
-    public function destroy($course , $identify)
+    public function destroy($course, $identify)
     {
-        $module = $this->moduleResource->deleteModule($identify); 
+        $this->moduleService->deleteModule($identify);
 
         return response()->json([], 204);
     }

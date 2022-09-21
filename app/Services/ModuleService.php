@@ -2,45 +2,52 @@
 
 namespace App\Services;
 
-
-use App\Repositories\CourseRepository;
+use App\Repositories\{
+    CourseRepository,
+    ModuleRepository
+};
 
 class ModuleService
 {
+    protected $moduleRepository, $courseRepository;
 
-    protected $moduleRepository , $courseRepository ;
-
-    public function __construct(ModuleRepository $moduleRepository, CourseRepository $courseRepository)
-    {
+    public function __construct(
+        ModuleRepository $moduleRepository,
+        CourseRepository $courseRepository
+    ) {
         $this->moduleRepository = $moduleRepository;
         $this->courseRepository = $courseRepository;
     }
 
     public function getModulesByCourse(string $course)
     {
-       $course =  $this->courseRepository->getCourseByUuid($course);
+        $course = $this->courseRepository->getCourseByUuid($course);
 
-       return $module = $this->moduleRepository->getModuleCourse($course->id);
+        return $this->moduleRepository->getModuleCourse($course->id);
     }
 
-    public function storeNewModule(array $data)
+    public function createNewModule(array $data)
     {
-        return $module = $this->moduleRepository->storeNewModule($data);
+        $course = $this->courseRepository->getCourseByUuid($data['course']);
+
+        return $this->moduleRepository->createNewModule($course->id, $data);
     }
 
     public function getModuleByCourse(string $course, string $identify)
     {
-       $course =  $this->courseRepository->getCourseByUuid($course);
+        $course = $this->courseRepository->getCourseByUuid($course);
 
-       return $module = $this->moduleRepository->getModuleByCourse($course->id,$identify);
+        return $this->moduleRepository->getModuleByCourse($course->id, $identify);
     }
 
-    public function  updateModule(string  $identify, array $data)
+    public function updateModule(string $identify, array $data)
     {
-        return $this->moduleRepository->updateModuleByUuid($identify);
+        $course = $this->courseRepository->getCourseByUuid($data['course']);
+
+        return $this->moduleRepository->updateModuleByUuid($course->id, $identify, $data);
     }
 
-    public function  deleteModule(string  $identify)
+    public function deleteModule(string $identify)
     {
         return $this->moduleRepository->deleteModuleByUuid($identify);
     }
