@@ -21,7 +21,7 @@ class ModuleController extends Controller
     public function index($course)
     {
 
-        $modules = $this->moduleService->getModulesByCourses($course);
+        $modules = $this->moduleService->getModulesByCourse($course);
 
         return $modules;
     }
@@ -34,9 +34,9 @@ class ModuleController extends Controller
      */
     public function store(StoreUpdateModule $request, $course)
     {
-        $module = $this->moduleResource->storeNewCourse($request->validated());
+        $module = $this->moduleService->storeNewModule($request->validated());
         
-        return new ModuleResource($course);  
+        return new ModuleResource($module);  
     }
 
     /**
@@ -47,7 +47,7 @@ class ModuleController extends Controller
      */
     public function show($course ,$identify)
     {
-        $module = $this->moduleResource->getModuleByCourse($identify); 
+        $module = $this->moduleResource->getModuleByCourse($course, $identify); 
 
         return new ModuleResource($course);  
     }
